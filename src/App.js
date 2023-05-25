@@ -7,10 +7,7 @@ import {
 import { VictoryBar, VictoryChart } from "victory";
 import { UseCreateCrudTableFor } from "./components/crud-table/crud-table";
 import { EditableResourceForm } from "./components/resource-form/resource-form";
-import {
-  MockMastersRepository,
-  MockStudentsRepository,
-} from "./data-access/mock";
+import environment from './environments/environment';
 
 const NavContext = createContext();
 
@@ -211,8 +208,8 @@ function App() {
 
   return (
     <InternalApp
-      mastersRepository={MockMastersRepository}
-      studentsRepository={MockStudentsRepository}
+      mastersRepository={environment.mastersRepository}
+      studentsRepository={environment.studentsRepository}
     ></InternalApp>
   );
 }

@@ -15,6 +15,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "prestart": "cp src/environments/environment.local.js src/environments/environment.js ",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
