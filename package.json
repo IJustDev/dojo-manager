@@ -15,9 +15,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "prestart": "cp src/environments/environment.local.js src/environments/environment.js ",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "copy-env": "cp src/environments/environment.$NODE_ENV.js src/environments/environment.js",
+    "start:local": "NODE_ENV=local npm run start",
+    "start:prod": "NODE_ENV=prod npm run start",
+    "start": "npm run copy-env && react-scripts start",
+    "build": "npm run copy-env && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

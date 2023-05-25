@@ -26,7 +26,7 @@ const databaseId = '646b508690f6c1c0362c';
 
 
 export const RepositoryFor = (collectionName) => {
-    return {
+    const repo = {
         create: (data) => {
             return AppWriteClient.provider().database.createDocument(databaseId, collectionName, ID.unique(), data);
         },
@@ -40,9 +40,11 @@ export const RepositoryFor = (collectionName) => {
             return (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)).documents;
         },
         count: async () => {
-            return (await AppWriteClient.provider().database.countDocuments(databaseId, collectionName));
+            return (await repo.list()).length;
         }
     }
+
+    return repo;
 }
 
 export const MastersRepository = RepositoryFor("646b50a7d6dd37020d7b");
