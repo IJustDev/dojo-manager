@@ -33,12 +33,12 @@ export function EditableResourceForm({ resource, resourceRepository, action, non
     return <form onSubmit={handleSubmit(onSubmit)}>
         <header>
             <h2>Create resource</h2></header>
-            {keys.map(c => {
-                return <>
-                        <label for="c">{transformLabel(c)}</label>
-                        <input {...register(c)} type="text" />
-</>
-            })}
+        {keys.map(c => {
+            return <>
+                <label for="c">{transformLabel(c)}</label>
+                <input {...register(c)} type="text" />
+            </>
+        })}
         <button type={'submit'}>{action.toUpperCase()}</button>
     </form>;
 }

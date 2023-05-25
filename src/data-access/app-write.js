@@ -1,6 +1,4 @@
 import { ID, Account, Databases, Client } from 'appwrite';
-import { MockMasters, MockStudents } from './mock-data';
-
 export const AppWriteClient = {
     sdk: null,
 
@@ -26,29 +24,6 @@ export const AppWriteClient = {
 
 const databaseId = '646b508690f6c1c0362c';
 
-export const MockRepositoryFor = (sampleData = []) => {
-    const items = sampleData; 
-    return {
-        create: (data) => {
-            const item = {id: sampleData.length + 1, ...data};
-            items.push(item);
-            console.log("Created ", item);
-            return item;
-        },
-        delete: (id) => {
-            items = items.splice(items.indexOf(c => c.id == id), 1);
-            return true;
-        },
-        update: (id, updatePayload) => {
-            console.log("updating " + id + " with payload", updatePayload);
-            return {id, ...updatePayload};
-        },
-        list: () => {
-            return items;
-        }
-    }
-
-}
 
 export const RepositoryFor = (collectionName) => {
     return {
@@ -63,12 +38,12 @@ export const RepositoryFor = (collectionName) => {
         },
         list: async () => {
             return (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)).documents;
+        },
+        count: async () => {
+            return (await AppWriteClient.provider().database.countDocuments(databaseId, collectionName));
         }
     }
 }
-
-export const MockStudentsRepository = MockRepositoryFor(MockStudents);
-export const MockMastersRepository = MockRepositoryFor(MockMasters);
 
 export const MastersRepository = RepositoryFor("646b50a7d6dd37020d7b");
 export const StudentsRepository = RepositoryFor("646b50ad2050a56378d2");
