@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Navbar } from "../components/navbar/navbar";
-import { EditableResourceForm } from "../components/resource-form/resource-form";
 import { Analytics } from "./analytics";
 import { Cockpit } from "./cockpit";
+import { CreatePage } from "./create";
 import { EditPage } from "./edit";
 
 export const NavContext = createContext();
@@ -13,7 +13,7 @@ export function NavProvider({children}) {
 
   const loadInitial = () => {
     const pathFromHash = window.location.hash.split('#')[1]
-    if (pathFromHash == 'edit') return;
+    if (pathFromHash == 'edit' || pathFromHash == 'create') return;
     setCurrent({path: pathFromHash ?? 'cockpit'});
     setHistory([{path: pathFromHash ?? 'cockpit'}])
   }
@@ -51,9 +51,12 @@ export function Router({mastersRepository, studentsRepository}) {
 
   switch (navContext.current.path) {
     case 'edit':
-      const data = navContext.current.params;
       return (
       <EditPage></EditPage>
+      )
+    case 'create':
+      return (
+      <CreatePage></CreatePage>
       )
     case 'cockpit':
       return (

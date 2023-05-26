@@ -99,9 +99,16 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
         return <p>Loading...</p>;
     }
 
+    const resource = headers.reduce((p, c) => {
+        p[c] = 0;
+        return p;
+    }, {});
+
     return <>
         {Searchbar}
         <CrudTable style={style} actions={actions} headers={headers} data={data} />
-        <button>Create</button>
+        <button onClick={() => {
+            push('create', {resourceRepository: repository, resource})
+        }}>Create</button>
     </>
 }
