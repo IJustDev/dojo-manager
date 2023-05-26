@@ -1,4 +1,5 @@
 import { ID, Account, Databases, Client } from 'appwrite';
+import { useEffect } from 'react';
 export const AppWriteClient = {
     sdk: null,
 
@@ -36,7 +37,7 @@ export const RepositoryFor = (collectionName) => {
         update: (id, updatePayload) => {
             return AppWriteClient.provider().database.updateDocument(databaseId, collectionName, id, updatePayload);
         },
-        list: async () => {
+        list: async (filter = {}) => {
             return (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)).documents;
         },
         count: async () => {
@@ -45,6 +46,29 @@ export const RepositoryFor = (collectionName) => {
     }
 
     return repo;
+}
+
+export const useLogin = (setUser) => {
+  useEffect(() => {
+    async function signIn() {
+      const account = await AppWriteClient.provider().account.get();
+      if (account) {
+        setUser(account);
+      } else {
+        const result = await AppWriteClient.login('test@royalzsoftware.de', 'test1234');
+        setUser(result);
+      }
+    }
+
+    signIn();
+  }, []);
+}
+
+export const SessionsRepository = {
+    user: undefined,
+    
+    login: () => {
+    }
 }
 
 export const MastersRepository = RepositoryFor("646b50a7d6dd37020d7b");

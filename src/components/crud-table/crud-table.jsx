@@ -3,67 +3,98 @@ import { useEffect, useState } from "react";
 import { transformLabel } from '../resource-form/resource-form';
 import './crud-table.css';
 
-const defaultActions = ['edit', 'create'];
+const CrudTableOptions = ({ item }) => {
+    const actions = [{
+        label: 'Delete',
+        destructive: true,
+        callback: (item) => {
+            alert("Delete: " + JSON.stringify(item));
+        }
+    }, {
+        label: 'Edit',
+        destructive: false,
+        callback: (item) => {
+            alert("Edit: " + JSON.stringify(item));
+        }
+    }
+    ]
 
-const ActionComponent = ({ }) => {
-    const actions = defaultActions;
     return actions.map((actionDefinition) => {
-        return <p onClick={() => {
-            actionDefinition.callback();
-        }}>{actionDefinition.name}</p>
+        return <p
+            style={
+                {
+                    ...(actionDefinition.destructive ? { color: 'red' } : {}),
+                    cursor: 'pointer',
+                }
+            }
+            onClick={() => {
+                actionDefinition.callback(item);
+            }}>{actionDefinition.label}</p>
     })
 }
 
-export function CrudTable({ data }) {
+export function CrudTable({ data, headers, style }) {
+    const hasData = data == undefined || data.length == 0;
 
-    const headers = Object.keys(data[0]);
+    headers ??= Object.keys(data[0]);
 
-    return <table>
+    return <table style={style}>
         <thead>
             {headers.map((header) => {
                 return <th>{transformLabel(header)}</th>;
             })}
-            <th>actions</th>
+            <th>Actions</th>
         </thead>
         <tbody>
             {data.map((dataRow) => {
                 return <tr>
-                    {Object.values(dataRow).map((col) => {
-                        return <td>{col}</td>
+                    {headers.map((header) => {
+                        return <td>{dataRow[header]}</td>
                     })}
-                    <td><ActionComponent></ActionComponent></td>
+                    <td><CrudTableOptions item={dataRow}></CrudTableOptions></td>
                 </tr>
             })}
-            <tr>
-            </tr>
         </tbody>
     </table>;
 }
 
-export function UseCreateCrudTableFor({ repository }) {
+function useSearchbar() {
+    const [currentSearch, setCurrentSearch] = useState('');
+
+    return {
+        Searchbar: <>
+        <input type="text" placeholder={'Search...'}onChange={(event) => {
+            setCurrentSearch(event.target.value);
+        }} value={currentSearch}></input>
+        </>,
+        currentSearch
+    };
+}
+
+export function UseCreateCrudTableFor({ repository, headers, style }) {
 
     const [data, setData] = useState([]);
     const [fetched, setFetched] = useState(false);
 
+    const {Searchbar, currentSearch} = useSearchbar();
+
     useEffect(() => {
         async function fetchData() {
-            const retrievedData = await repository.list();
+            const retrievedData = await repository.list({query: currentSearch});
             setData(retrievedData);
             setFetched(true);
         }
 
         fetchData();
-    }, [fetched]);
-    
+    }, [fetched, currentSearch]);
+
     if (!fetched) {
         return <p>Loading...</p>;
     }
 
-    if (data == undefined || data.length == 0) {
-        return 'No data';
-    }
-
-    return <section>
-        <CrudTable data={data}></CrudTable>
-    </section>;
+    return <>
+        {Searchbar}
+        <CrudTable style={style} headers={headers} data={data} />
+        <button>Create</button>
+    </>
 }

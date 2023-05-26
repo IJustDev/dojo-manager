@@ -1,6 +1,6 @@
 import { MockMasters, MockStudents } from "./mock-data";
 
-export const MockRepositoryFor = (sampleData = []) => {
+export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filter) => { return items; }) => {
     const items = sampleData; 
     return {
         create: (data) => {
@@ -17,7 +17,9 @@ export const MockRepositoryFor = (sampleData = []) => {
             console.log("updating " + id + " with payload", updatePayload);
             return {id, ...updatePayload};
         },
-        list: () => {
+        list: (filter = undefined) => {
+            if (filter)
+                return filterHandler(items, filter);
             return items;
         },
         count: () => {
@@ -26,5 +28,14 @@ export const MockRepositoryFor = (sampleData = []) => {
     }
 
 }
-export const MockStudentsRepository = MockRepositoryFor(MockStudents);
-export const MockMastersRepository = MockRepositoryFor(MockMasters);
+export const MockStudentsRepository = MockRepositoryFor(MockStudents, (items, filter) => {
+    const {query} = filter;
+    if (!!query) {
+        return items.filter(c => c.first_name == query)
+    }
+
+    return items;
+});
+export const MockMastersRepository = MockRepositoryFor(MockMasters, (items, filter) => {
+    return items;
+});
