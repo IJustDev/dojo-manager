@@ -16,6 +16,11 @@ export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filte
         },
         update: (id, updatePayload) => {
             console.log("updating " + id + " with payload", updatePayload);
+            const itemIndex = items.findIndex(c => c.id == id);
+            items[itemIndex] = {
+                ...items[itemIndex],
+                ...updatePayload,
+            };
             return {id, ...updatePayload};
         },
         list: (filter = undefined) => {

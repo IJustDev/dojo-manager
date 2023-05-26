@@ -61,7 +61,7 @@ function useSearchbar() {
 export function UseCreateCrudTableFor({ repository, headers, style }) {
     const [updatedAt, setUpdatedAt] = useState(new Date());
 
-    const { push } = useContext(NavContext);
+    const { push, history } = useContext(NavContext);
 
     const actions = [{
         label: 'Delete',
@@ -74,7 +74,7 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
         label: 'Edit',
         destructive: false,
         callback: (item) => {
-            push('edit', { test: 0 });
+            push('edit', { resource: item, resourceRepository: repository, action: 'update' });
             setUpdatedAt(new Date());
         }
     }
@@ -93,7 +93,7 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
         }
 
         fetchData();
-    }, [fetched, currentSearch, updatedAt]);
+    }, [fetched, currentSearch, updatedAt, history]);
 
     if (!fetched) {
         return <p>Loading...</p>;
