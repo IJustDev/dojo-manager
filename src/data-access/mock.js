@@ -28,6 +28,9 @@ export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filte
                 return filterHandler(items, filter);
             return items;
         },
+        get: (id) => {
+            return items.find(c => c.id === id);
+        },
         count: () => {
             return items?.length;
         }

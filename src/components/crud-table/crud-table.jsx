@@ -74,7 +74,7 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
         label: 'Edit',
         destructive: false,
         callback: (item) => {
-            push('edit', { resource: item, resourceRepository: repository, action: 'update' });
+            push('edit', { resourceId: item.id, resourceRepository: repository, action: 'update' });
             setUpdatedAt(new Date());
         }
     }

@@ -1,9 +1,24 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EditableResourceForm } from "../components/resource-form/resource-form";
 import { NavContext } from "./router";
 
 export function EditPage() {
     const {current, back} = useContext(NavContext);
+    const navParams = current.params;
+    const [resource, setResource] = useState(undefined);
+
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        async function fetchResource() {
+            const result = await navParams.resourceRepository.get(navParams.resourceId);
+            setResource(result);
+            setLoading(false);
+        }
+
+        fetchResource();
+
+    }, []);
 
     const params= {
         onFormSubmit: () => {
@@ -12,5 +27,8 @@ export function EditPage() {
         ...current.params,
     }
 
-    return <EditableResourceForm {...params}></EditableResourceForm>
+    if (loading)
+    return <p>Loading</p>;
+
+    return <EditableResourceForm {...params} resource={resource}></EditableResourceForm>
 }
