@@ -10,7 +10,8 @@ export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filte
             return item;
         },
         delete: (id) => {
-            items = items.splice(items.indexOf(c => c.id == id), 1);
+            const index = items.findIndex(c => c.id == id);
+            items.splice(index, 1);
             return true;
         },
         update: (id, updatePayload) => {
@@ -18,7 +19,7 @@ export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filte
             return {id, ...updatePayload};
         },
         list: (filter = undefined) => {
-            if (filter)
+            if (!!filter)
                 return filterHandler(items, filter);
             return items;
         },
@@ -31,11 +32,13 @@ export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filte
 export const MockStudentsRepository = MockRepositoryFor(MockStudents, (items, filter) => {
     const {query} = filter;
     if (!!query) {
-        return items.filter(c => c.first_name == query)
+        return items//.filter(c => c.first_name == query)
     }
 
     return items;
 });
 export const MockMastersRepository = MockRepositoryFor(MockMasters, (items, filter) => {
+    if (!!filter.query)
+        return items.filter(item => item.first_name.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1) ?? [];
     return items;
 });

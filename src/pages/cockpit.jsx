@@ -20,6 +20,7 @@ export function Cockpit({ studentsRepository, mastersRepository }) {
           </header>
           <UseCreateCrudTableFor
             repository={mastersRepository}
+            headers={['first_name', 'last_name', 'rate']}
           ></UseCreateCrudTableFor>
         </section>
       </main>

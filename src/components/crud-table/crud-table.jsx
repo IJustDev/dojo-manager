@@ -3,22 +3,7 @@ import { useEffect, useState } from "react";
 import { transformLabel } from '../resource-form/resource-form';
 import './crud-table.css';
 
-const CrudTableOptions = ({ item }) => {
-    const actions = [{
-        label: 'Delete',
-        destructive: true,
-        callback: (item) => {
-            alert("Delete: " + JSON.stringify(item));
-        }
-    }, {
-        label: 'Edit',
-        destructive: false,
-        callback: (item) => {
-            alert("Edit: " + JSON.stringify(item));
-        }
-    }
-    ]
-
+const CrudTableOptions = ({ item, actions }) => {
     return actions.map((actionDefinition) => {
         return <p
             style={
@@ -33,10 +18,11 @@ const CrudTableOptions = ({ item }) => {
     })
 }
 
-export function CrudTable({ data, headers, style }) {
-    const hasData = data == undefined || data.length == 0;
+export function CrudTable({ data, headers, style, actions }) {
 
-    headers ??= Object.keys(data[0]);
+    const hasData = !!data && data.length > 0;
+
+    headers ??= hasData ? Object.keys(data[0]) : [];
 
     return <table style={style}>
         <thead>
@@ -46,14 +32,14 @@ export function CrudTable({ data, headers, style }) {
             <th>Actions</th>
         </thead>
         <tbody>
-            {data.map((dataRow) => {
+            {hasData ? data.map((dataRow) => {
                 return <tr>
                     {headers.map((header) => {
                         return <td>{dataRow[header]}</td>
                     })}
-                    <td><CrudTableOptions item={dataRow}></CrudTableOptions></td>
+                    <td><CrudTableOptions item={dataRow} actions={actions}></CrudTableOptions></td>
                 </tr>
-            })}
+            }) : <p>No data</p>}
         </tbody>
     </table>;
 }
@@ -63,30 +49,47 @@ function useSearchbar() {
 
     return {
         Searchbar: <>
-        <input type="text" placeholder={'Search...'}onChange={(event) => {
-            setCurrentSearch(event.target.value);
-        }} value={currentSearch}></input>
+            <input type="text" placeholder={'Search...'} onChange={(event) => {
+                setCurrentSearch(event.target.value);
+            }} value={currentSearch}></input>
         </>,
         currentSearch
     };
 }
 
 export function UseCreateCrudTableFor({ repository, headers, style }) {
+    const [updatedAt, setUpdatedAt] = useState(new Date());
+
+    const actions = [{
+        label: 'Delete',
+        destructive: true,
+        callback: (item) => {
+            repository.delete(item.id);
+            setUpdatedAt(new Date());
+        }
+    }, {
+        label: 'Edit',
+        destructive: false,
+        callback: (item) => {
+            setUpdatedAt(new Date());
+        }
+    }
+    ]
 
     const [data, setData] = useState([]);
     const [fetched, setFetched] = useState(false);
 
-    const {Searchbar, currentSearch} = useSearchbar();
+    const { Searchbar, currentSearch } = useSearchbar();
 
     useEffect(() => {
         async function fetchData() {
-            const retrievedData = await repository.list({query: currentSearch});
+            const retrievedData = await repository.list({ query: currentSearch });
             setData(retrievedData);
             setFetched(true);
         }
 
         fetchData();
-    }, [fetched, currentSearch]);
+    }, [fetched, currentSearch, updatedAt]);
 
     if (!fetched) {
         return <p>Loading...</p>;
@@ -94,7 +97,7 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
 
     return <>
         {Searchbar}
-        <CrudTable style={style} headers={headers} data={data} />
+        <CrudTable style={style} actions={actions} headers={headers} data={data} />
         <button>Create</button>
     </>
 }
