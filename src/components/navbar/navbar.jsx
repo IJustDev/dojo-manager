@@ -7,9 +7,9 @@ export function Navbar() {
 
     return (
       <a
-        href="#"
+      style={{cursor: 'pointer'}}
         onClick={() => {
-          setCurrent(path);
+          setCurrent({path});
         }}
       >
         {children}

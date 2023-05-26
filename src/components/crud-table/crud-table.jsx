@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { NavContext } from '../../pages/router';
 import { transformLabel } from '../resource-form/resource-form';
 import './crud-table.css';
 
@@ -60,6 +61,8 @@ function useSearchbar() {
 export function UseCreateCrudTableFor({ repository, headers, style }) {
     const [updatedAt, setUpdatedAt] = useState(new Date());
 
+    const { push } = useContext(NavContext);
+
     const actions = [{
         label: 'Delete',
         destructive: true,
@@ -71,6 +74,7 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
         label: 'Edit',
         destructive: false,
         callback: (item) => {
+            push('edit', { test: 0 });
             setUpdatedAt(new Date());
         }
     }

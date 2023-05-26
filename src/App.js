@@ -2,25 +2,23 @@ import {
   useState,
 } from "react";
 import environment from './environments/environment';
-import { NavContext, Router } from "./pages/router";
+import { NavProvider, Router } from "./pages/router";
 
 function InternalApp({ mastersRepository, studentsRepository }) {
-  const [current, setCurrent] = useState('cockpit');
-
   return (
-    <NavContext.Provider value={{ setCurrent, current }}>
+    <NavProvider>
       <Router
         mastersRepository={mastersRepository}
         studentsRepository={studentsRepository}
       ></Router>
-    </NavContext.Provider>
+    </NavProvider>
   );
 }
 
 function App() {
   const [user, setUser] = useState({});
 
-  const {mastersRepository, studentsRepository} = environment;
+  const { mastersRepository, studentsRepository } = environment;
 
   if (user == null) {
     return <p>Logging you in...</p>;
