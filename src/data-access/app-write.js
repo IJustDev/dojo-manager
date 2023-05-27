@@ -1,5 +1,6 @@
 import { ID, Account, Databases, Client } from 'appwrite';
 import { useEffect } from 'react';
+import { MasterForm } from './forms/master';
 export const AppWriteClient = {
     sdk: null,
 
@@ -26,7 +27,7 @@ export const AppWriteClient = {
 const databaseId = '646b508690f6c1c0362c';
 
 
-export const RepositoryFor = (collectionName, handleFilter = (items, filter) => {return items;}) => {
+export const RepositoryFor = (formDefinition, collectionName, handleFilter = (items, filter) => {return items;}) => {
     const repo = {
         create: (data) => {
             return AppWriteClient.provider().database.createDocument(databaseId, collectionName, ID.unique(), data);
@@ -52,7 +53,8 @@ export const RepositoryFor = (collectionName, handleFilter = (items, filter) => 
         },
         count: async () => {
             return (await repo.list()).length;
-        }
+        },
+        formDefinition
     }
 
     return repo;
@@ -81,12 +83,12 @@ export const SessionsRepository = {
     }
 }
 
-export const MastersRepository = RepositoryFor("646b50a7d6dd37020d7b", (items, filter) => {
+export const MastersRepository = RepositoryFor(new MasterForm(), "646b50a7d6dd37020d7b", (items, filter) => {
     if (!!filter.query) {
         return items.filter(item => item.first_name.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1);
     }
 
     return items;
 });
-export const StudentsRepository = RepositoryFor("646b50ad2050a56378d2");
-export const ClassesRepository = RepositoryFor("classes");
+export const StudentsRepository = RepositoryFor(undefined, "646b50ad2050a56378d2");
+export const ClassesRepository = RepositoryFor(undefined, "classes");

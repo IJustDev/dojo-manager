@@ -1,6 +1,7 @@
+import { MasterForm } from "./forms/master";
 import { MockMasters, MockStudents } from "./mock-data";
 
-export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filter) => { return items; }) => {
+export const MockRepositoryFor = (formDefinition, sampleData = [], filterHandler = (items, filter) => { return items; }) => {
     const items = sampleData; 
     return {
         create: (data) => {
@@ -37,7 +38,7 @@ export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filte
     }
 
 }
-export const MockStudentsRepository = MockRepositoryFor(MockStudents, (items, filter) => {
+export const MockStudentsRepository = MockRepositoryFor(undefined, MockStudents, (items, filter) => {
     const {query} = filter;
     if (!!query) {
         return items//.filter(c => c.first_name == query)
@@ -45,7 +46,7 @@ export const MockStudentsRepository = MockRepositoryFor(MockStudents, (items, fi
 
     return items;
 });
-export const MockMastersRepository = MockRepositoryFor(MockMasters, (items, filter) => {
+export const MockMastersRepository = MockRepositoryFor(new MasterForm(), MockMasters, (items, filter) => {
     if (!!filter.query)
         return items.filter(item => item.first_name.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1) ?? [];
     return items;

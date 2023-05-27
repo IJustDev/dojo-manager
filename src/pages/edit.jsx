@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { EditableResourceForm } from "../components/resource-form/resource-form";
-import { MasterFormValidator } from "../data-access/forms/master";
+import { MasterForm } from "../data-access/forms/master";
 import { NavContext } from "./router";
 
 export function EditPage() {
     const {current, back} = useContext(NavContext);
     const navParams = current.params;
     const [resource, setResource] = useState(undefined);
-    const [validator] = useState(new MasterFormValidator());
+    const [formDefinition] = useState(navParams.formDefinition);
 
     const [loading, setLoading] = useState(true);
     
@@ -32,5 +32,5 @@ export function EditPage() {
     if (loading)
     return <p>Loading</p>;
 
-    return <EditableResourceForm {...params} validator={validator} resource={resource}></EditableResourceForm>
+    return <EditableResourceForm {...params} formDefinition={formDefinition} resource={resource}></EditableResourceForm>
 }

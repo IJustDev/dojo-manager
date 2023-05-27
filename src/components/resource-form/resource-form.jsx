@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { RequiredValidator } from '../../data-access/forms/validator';
 
 export const transformLabel = (key) => {
     const parts = key.split('_');
@@ -9,9 +10,8 @@ export const transformLabel = (key) => {
     }).join(' ');
 }
 
-export function EditableResourceForm({ resource, resourceRepository, action, nonEditableFields, onFormSubmit, validator }) {
-    nonEditableFields ??= ['id'];
-    const keys = Object.keys(resource).filter(c => nonEditableFields.indexOf(c) === -1);
+export function EditableResourceForm({ resource, resourceRepository, action, onFormSubmit, formDefinition }) {
+    const keys = formDefinition.fields;
     const { register, handleSubmit } = useForm({
         defaultValues: useMemo(() => {
             return action == 'update' ? resource : {};
@@ -21,7 +21,7 @@ export function EditableResourceForm({ resource, resourceRepository, action, non
     const onSubmit = (data) => {
 
         try {
-            validator.validate(data);
+            formDefinition.validate(data);
         } catch (error) {
             alert(error)
             return;
@@ -41,11 +41,14 @@ export function EditableResourceForm({ resource, resourceRepository, action, non
 
     return <form onSubmit={handleSubmit(onSubmit)}>
         <header>
-            <h2>Create resource</h2></header>
+            <h2>Create resource</h2>
+        </header>
         {keys.map(c => {
             return <>
-                <label for="c">{transformLabel(c)}</label>
-                <input {...register(c)} type="text" />
+                <label for={c.label}>{transformLabel(c.label)}</label>
+                {c.customField ? <c.customField selectProps={register(c.formField)}></c.customField> :
+                    <input type={c.type ?? 'text'} {...register(c.formField)} />
+                }
             </>
         })}
         <button type={'submit'}>{action.toUpperCase()}</button>
