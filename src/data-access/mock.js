@@ -1,4 +1,6 @@
 import { MasterForm } from "./forms/master";
+import { PlanForm } from "./forms/plan";
+import { StudentForm } from "./forms/student";
 import { MockMasters, MockStudents } from "./mock-data";
 
 export const MockRepositoryFor = (formDefinition, sampleData = [], filterHandler = (items, filter) => { return items; }) => {
@@ -35,10 +37,11 @@ export const MockRepositoryFor = (formDefinition, sampleData = [], filterHandler
         count: () => {
             return items?.length;
         },
+        formDefinition,
     }
 
 }
-export const MockStudentsRepository = MockRepositoryFor(undefined, MockStudents, (items, filter) => {
+export const MockStudentsRepository = MockRepositoryFor(new StudentForm(), MockStudents, (items, filter) => {
     const {query} = filter;
     if (!!query) {
         return items//.filter(c => c.first_name == query)
@@ -51,3 +54,5 @@ export const MockMastersRepository = MockRepositoryFor(new MasterForm(), MockMas
         return items.filter(item => item.first_name.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1) ?? [];
     return items;
 });
+
+export const MockPlanRepository = MockRepositoryFor(new PlanForm(), [{name: 'Plan', id: 0}]);

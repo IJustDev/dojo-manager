@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Navbar } from "../components/navbar/navbar";
+import { useDataAccess } from "../data-access/data-layer";
 import { Analytics } from "./analytics";
 import { Cockpit } from "./cockpit";
 import { CreatePage } from "./create";
@@ -46,9 +47,9 @@ export function NavProvider({children}) {
 
 }
 
-export function Router({mastersRepository, studentsRepository}) {
+export function Router() {
   const navContext = useContext(NavContext);
-  const params = navContext.current.params;
+  const {mastersRepository, studentsRepository} = useDataAccess();
 
   switch (navContext.current.path) {
     case 'edit':
@@ -61,17 +62,11 @@ export function Router({mastersRepository, studentsRepository}) {
       )
     case 'cockpit':
       return (
-        <Cockpit
-          mastersRepository={mastersRepository}
-          studentsRepository={studentsRepository}
-        />
+        <Cockpit/>
       );
     case 'analytics':
       return (
-        <Analytics
-          mastersRepository={mastersRepository}
-          studentsRepository={studentsRepository}
-        />
+        <Analytics/>
       );
     default:
       return <header>

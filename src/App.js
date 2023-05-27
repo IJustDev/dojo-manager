@@ -1,16 +1,15 @@
 import {
   useState,
 } from "react";
-import environment from './environments/environment';
+import { DataAccessProvider } from "./data-access/data-layer";
 import { NavProvider, Router } from "./pages/router";
 
-function InternalApp({ mastersRepository, studentsRepository }) {
+function InternalApp() {
   return (
     <NavProvider>
-      <Router
-        mastersRepository={mastersRepository}
-        studentsRepository={studentsRepository}
-      ></Router>
+      <DataAccessProvider>
+        <Router></Router>
+      </DataAccessProvider>
     </NavProvider>
   );
 }
@@ -18,17 +17,12 @@ function InternalApp({ mastersRepository, studentsRepository }) {
 function App() {
   const [user, setUser] = useState({});
 
-  const { mastersRepository, studentsRepository } = environment;
-
   if (user == null) {
     return <p>Logging you in...</p>;
   }
 
   return (
-    <InternalApp
-      mastersRepository={mastersRepository}
-      studentsRepository={studentsRepository}
-    ></InternalApp>
+    <InternalApp></InternalApp>
   );
 }
 

@@ -1,10 +1,11 @@
 import './cockpit.css';
 import { UseCreateCrudTableFor } from "../components/crud-table/crud-table";
 import { Navbar } from "../components/navbar/navbar";
-import { useEffect } from 'react';
-import { AppWriteClient } from '../data-access/app-write';
+import { useDataAccess } from '../data-access/data-layer';
 
-export function Cockpit({ studentsRepository, mastersRepository }) {
+export function Cockpit() {
+  const {studentsRepository} = useDataAccess();
+
   return (
     <>
       <header>
@@ -16,11 +17,11 @@ export function Cockpit({ studentsRepository, mastersRepository }) {
       <main>
         <section>
           <header>
-            <h2>Meister</h2>
+            <h2>Students</h2>
           </header>
           <UseCreateCrudTableFor
-            repository={mastersRepository}
-            headers={['first_name', 'last_name', 'rate']}
+            repository={studentsRepository}
+            headers={['id', 'first_name', 'last_name', 'plan']}
           ></UseCreateCrudTableFor>
         </section>
       </main>

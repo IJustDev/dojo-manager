@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { RequiredValidator } from '../../data-access/forms/validator';
 
 export const transformLabel = (key) => {
     const parts = key.split('_');

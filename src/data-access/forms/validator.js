@@ -33,4 +33,8 @@ export class FormValidator {
             })
         });
     }
+
+    populateForView(item, dataAccess) {
+        return item;
+    }
 }

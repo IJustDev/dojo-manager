@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState, useContext } from "react";
+import { useDataAccess } from '../../data-access/data-layer';
 import { NavContext } from '../../pages/router';
 import { transformLabel } from '../resource-form/resource-form';
 import './crud-table.css';
@@ -19,11 +20,25 @@ const CrudTableOptions = ({ item, actions }) => {
     })
 }
 
-export function CrudTable({ data, headers, style, actions }) {
-
+export function CrudTable({ data, headers, style, actions, formDefinition }) {
     const hasData = !!data && data.length > 0;
+    const dataAccess = useDataAccess();
+    const [actualData, setActualData] = useState([]);
 
-    headers ??= hasData ? Object.keys(data[0]) : [];
+    useEffect(() => {
+        const populate = async () => {
+            const myData = [];
+            for (const item of data) {
+                const x =(await formDefinition.populateForView(item, dataAccess));
+                myData.push(x);
+            }
+
+            setActualData(myData);
+        }
+
+        populate();
+    }, []);
+
 
     return <table style={style}>
         <thead>
@@ -33,7 +48,7 @@ export function CrudTable({ data, headers, style, actions }) {
             <th>Actions</th>
         </thead>
         <tbody>
-            {hasData ? data.map((dataRow) => {
+            {hasData ? actualData.map((dataRow) => {
                 return <tr>
                     {headers.map((header) => {
                         return <td>{dataRow[header]}</td>
@@ -60,6 +75,7 @@ function useSearchbar() {
 
 export function UseCreateCrudTableFor({ repository, headers, style }) {
     const [updatedAt, setUpdatedAt] = useState(new Date());
+    const formDefinition = repository.formDefinition;
 
     const { push, history } = useContext(NavContext);
 
@@ -74,7 +90,7 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
         label: 'Edit',
         destructive: false,
         callback: (item) => {
-            push('edit', { resourceId: item.id, resourceRepository: repository, action: 'update' });
+            push('edit', { resourceId: item.id, resourceRepository: repository, action: 'update', formDefinition });
             setUpdatedAt(new Date());
         }
     }
@@ -99,11 +115,9 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
         return <p>Loading...</p>;
     }
 
-    const formDefinition = repository.formDefinition;
-
     return <>
         {Searchbar}
-        <CrudTable style={style} actions={actions} headers={headers} data={data} />
+        <CrudTable style={style} actions={actions} headers={headers} data={data} formDefinition={repository.formDefinition}/>
         <button onClick={() => {
             push('create', {resourceRepository: repository, formDefinition})
         }}>Create</button>

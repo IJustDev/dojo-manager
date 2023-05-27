@@ -1,6 +1,7 @@
-import { MockStudentsRepository, MockMastersRepository } from '../data-access/mock';
+import { MockStudentsRepository, MockMastersRepository, MockPlanRepository } from '../data-access/mock';
 
 export default {
     studentsRepository: MockStudentsRepository,
     mastersRepository: MockMastersRepository,
+    planRepository: MockPlanRepository,
 }
