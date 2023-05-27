@@ -19,6 +19,7 @@ export function NavProvider({children}) {
   }
 
   useEffect(() => {
+    window.addEventListener("hashchange", e => loadInitial());
     loadInitial();
   }, []);
 
