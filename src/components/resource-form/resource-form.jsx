@@ -9,7 +9,7 @@ export const transformLabel = (key) => {
     }).join(' ');
 }
 
-export function EditableResourceForm({ resource, resourceRepository, action, nonEditableFields, onFormSubmit }) {
+export function EditableResourceForm({ resource, resourceRepository, action, nonEditableFields, onFormSubmit, validator }) {
     nonEditableFields ??= ['id'];
     const keys = Object.keys(resource).filter(c => nonEditableFields.indexOf(c) === -1);
     const { register, handleSubmit } = useForm({
@@ -19,8 +19,15 @@ export function EditableResourceForm({ resource, resourceRepository, action, non
     });
 
     const onSubmit = (data) => {
+
+        try {
+            validator.validate(data);
+        } catch (error) {
+            alert(error)
+            return;
+        }
+
         const act = action == 'update' ? () => {
-            alert(JSON.stringify(resource));
             resourceRepository.update(resource.id, data);
         } : () => {
             resourceRepository.create(data);

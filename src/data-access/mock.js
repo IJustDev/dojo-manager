@@ -33,7 +33,7 @@ export const MockRepositoryFor = (sampleData = [], filterHandler = (items, filte
         },
         count: () => {
             return items?.length;
-        }
+        },
     }
 
 }
