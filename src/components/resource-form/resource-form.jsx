@@ -20,6 +20,7 @@ export function EditableResourceForm({ resource, resourceRepository, action, non
 
     const onSubmit = (data) => {
         const act = action == 'update' ? () => {
+            alert(JSON.stringify(resource));
             resourceRepository.update(resource.id, data);
         } : () => {
             resourceRepository.create(data);

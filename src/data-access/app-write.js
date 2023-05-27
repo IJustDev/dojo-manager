@@ -26,7 +26,7 @@ export const AppWriteClient = {
 const databaseId = '646b508690f6c1c0362c';
 
 
-export const RepositoryFor = (collectionName) => {
+export const RepositoryFor = (collectionName, handleFilter = (items, filter) => {return items;}) => {
     const repo = {
         create: (data) => {
             return AppWriteClient.provider().database.createDocument(databaseId, collectionName, ID.unique(), data);
@@ -38,7 +38,17 @@ export const RepositoryFor = (collectionName) => {
             return AppWriteClient.provider().database.updateDocument(databaseId, collectionName, id, updatePayload);
         },
         list: async (filter = {}) => {
-            return (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)).documents;
+            const items = (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)).documents.map(c => ({...c, id: c.$id}));
+            if (!!filter) {
+                return handleFilter(items, filter);
+            }
+
+            return items;
+        },
+        get: async (id) => {
+            const item = (await AppWriteClient.provider().database.getDocument(databaseId, collectionName, id));
+
+            return {...item, id: id};
         },
         count: async () => {
             return (await repo.list()).length;
@@ -71,6 +81,12 @@ export const SessionsRepository = {
     }
 }
 
-export const MastersRepository = RepositoryFor("646b50a7d6dd37020d7b");
+export const MastersRepository = RepositoryFor("646b50a7d6dd37020d7b", (items, filter) => {
+    if (!!filter.query) {
+        return items.filter(item => item.first_name.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1);
+    }
+
+    return items;
+});
 export const StudentsRepository = RepositoryFor("646b50ad2050a56378d2");
 export const ClassesRepository = RepositoryFor("classes");
