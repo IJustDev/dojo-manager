@@ -1,6 +1,7 @@
 import { FormValidator, RequiredValidator } from "./validator";
 
 export class PlanForm extends FormValidator {
+    modelName = 'plan';
     fields = [
         {
             label: 'Name',
@@ -15,4 +16,11 @@ export class PlanForm extends FormValidator {
             validators: [RequiredValidator],
         }
     ];
+
+    populateForView(plan) {
+        return {
+            ...plan,
+            pricing: '$ ' + plan.pricing,
+        }
+    }
 }

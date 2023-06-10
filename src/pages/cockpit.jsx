@@ -44,7 +44,7 @@ const invoiceProps = (student, plan) => {
     },
     contact: {
       label: "Invoice issued for:",
-      name: student.first_name + student.last_name,
+      name: student.first_name + ' ' + student.last_name,
       address: student.address,
     },
     invoice: {

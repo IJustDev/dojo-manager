@@ -19,7 +19,7 @@ export function Navbar() {
 
   return (
     <nav>
-      <a href="https://andybrewer.github.io/mvp/">Dojo Manager</a>
+      <NavItem path={'analytics'}>Dojo Manager</NavItem>
       <ul>
         <li>
           <NavItem path={'analytics'}>Analytics</NavItem>

@@ -1,4 +1,3 @@
-import { Query } from "appwrite";
 import { useEffect, useState } from "react";
 import { VictoryBar, VictoryChart } from "victory";
 import { Navbar } from "../components/navbar/navbar";
@@ -43,7 +42,7 @@ const useAnalyticsDataProvider = () => {
         rev += plan.pricing * plansWithCount[planId];
 
       }
-      setRevenue(rev);
+      setRevenue(Math.ceil(rev * 100) / 100);
 
       setChartData([
         { month: "January", members: 43 },

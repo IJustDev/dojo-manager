@@ -78,10 +78,19 @@ export const RepositoryFor = (formDefinition, collectionName) => {
 
 export const SessionsRepository = {
     login: async (username, password) => {
-        return (await AppWriteClient.login(username, password));
+        try {
+            return (await AppWriteClient.login(username, password));
+        } catch(error) {
+            alert(error.message);
+            return;
+        }
     },
     getSavedUser: async () => {
-        return (await AppWriteClient.provider().account.get());
+        try {
+            return (await AppWriteClient.provider().account.get());
+        } catch {
+            return undefined;
+        }
     }
 }
 

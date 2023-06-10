@@ -121,6 +121,6 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         <CrudTable style={style} actions={actions} headers={headers} data={data} formDefinition={repository.formDefinition} />
         <button onClick={() => {
             push('create', { resourceRepository: repository, formDefinition })
-        }}>Create</button>
+        }}>New {formDefinition.modelName}</button>
     </section>
 }

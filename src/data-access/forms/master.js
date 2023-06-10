@@ -1,6 +1,7 @@
 import { FormValidator, RegexValidator, RequiredValidator } from "./validator";
 
 export class MasterForm extends FormValidator {
+    modelName = 'master';
 
     fields = [
         {

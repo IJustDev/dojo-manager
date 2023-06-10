@@ -26,6 +26,7 @@ const usePlanSelect = ({ selectProps }) => {
 }
 
 export class StudentForm extends FormValidator {
+    modelName = 'student';
 
     fields = [
         {
@@ -59,7 +60,7 @@ export class StudentForm extends FormValidator {
             return {...item, pretty_plan: undefined};
         try {
             const plan = (await plansRepository.get(item.plan));
-            return { ...item, pretty_plan: plan.name + ' - ' + plan.pricing + '$' };
+            return { ...item, pretty_plan: plan.name + ' - $ ' + plan.pricing};
         } catch {
             return { ...item };
         }

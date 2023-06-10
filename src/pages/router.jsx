@@ -77,16 +77,20 @@ function LoginScreen({ signIn }) {
     await signIn(formValues.email, formValues.password);
   }
 
-  return <>
-    <h1>Login</h1>
-    <p>Login please</p>
+  return <section>
 
     <form onSubmit={handleSubmit(onSubmit)}>
+      <header>
+        <h1>Login</h1>
+        <p>Login please</p>
+      </header>
+      <label for="email">Email</label>
       <input type="text" {...register('email')} />
+      <label for="password">Password</label>
       <input type="password" {...register('password')} />
       <input type="submit" />
     </form>
-  </>
+  </section>
 }
 
 export function Router() {
