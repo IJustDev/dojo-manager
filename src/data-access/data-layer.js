@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import environment from "../environments/environment";
 
 export const DataLayerContext = createContext();
@@ -8,6 +8,5 @@ export function DataAccessProvider({children}) {
 }
 
 export function useDataAccess() {
-    const x = useContext(DataLayerContext)
-    return {...x};
+    return {...useContext(DataLayerContext)}
 }

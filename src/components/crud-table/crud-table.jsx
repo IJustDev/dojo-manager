@@ -73,7 +73,7 @@ function useSearchbar() {
     };
 }
 
-export function UseCreateCrudTableFor({ repository, headers, style }) {
+export function UseCreateCrudTableFor({ repository, headers, style, query_field = 'first_name' }) {
     const [updatedAt, setUpdatedAt] = useState(new Date());
     const formDefinition = repository.formDefinition;
 
@@ -103,7 +103,8 @@ export function UseCreateCrudTableFor({ repository, headers, style }) {
 
     useEffect(() => {
         async function fetchData() {
-            const retrievedData = await repository.list({ query: currentSearch });
+            const filter = currentSearch != '' ?{ [query_field]: currentSearch }: {};
+            const retrievedData = await repository.list(filter);
             setData(retrievedData);
             setFetched(true);
         }

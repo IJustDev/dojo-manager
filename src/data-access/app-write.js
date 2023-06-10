@@ -1,6 +1,7 @@
-import { ID, Account, Databases, Client } from 'appwrite';
+import { ID, Account, Databases, Client, Query } from 'appwrite';
 import { useEffect } from 'react';
 import { MasterForm } from './forms/master';
+import { StudentForm } from './forms/student';
 export const AppWriteClient = {
     sdk: null,
 
@@ -26,8 +27,19 @@ export const AppWriteClient = {
 
 const databaseId = '646b508690f6c1c0362c';
 
+export const DefaultAppWriteFilter = (filter) => {
+}
 
-export const RepositoryFor = (formDefinition, collectionName, handleFilter = (items, filter) => {return items;}) => {
+
+export const RepositoryFor = (formDefinition, collectionName) => {
+    const defaultAppWriteFilter = (filter) => {
+        const queries = Object.keys(filter).map((key) => {
+            return Query.equal(key, filter[key]);
+        });
+
+        return AppWriteClient.provider().database.listDocuments(databaseId, collectionName, queries);
+    }
+
     const repo = {
         create: (data) => {
             return AppWriteClient.provider().database.createDocument(databaseId, collectionName, ID.unique(), data);
@@ -38,18 +50,16 @@ export const RepositoryFor = (formDefinition, collectionName, handleFilter = (it
         update: (id, updatePayload) => {
             return AppWriteClient.provider().database.updateDocument(databaseId, collectionName, id, updatePayload);
         },
-        list: async (filter = {}) => {
-            const items = (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)).documents.map(c => ({...c, id: c.$id}));
-            if (!!filter) {
-                return handleFilter(items, filter);
-            }
+        list: async (filter = undefined) => {
+            const {documents} = (
+                !!filter ? (await defaultAppWriteFilter(filter)) : (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)));
+                
 
-            return items;
+            return documents.map(c => ({ ...c, id: c.$id }));
         },
         get: async (id) => {
             const item = (await AppWriteClient.provider().database.getDocument(databaseId, collectionName, id));
-
-            return {...item, id: id};
+            return { ...item, id: id };
         },
         count: async () => {
             return (await repo.list()).length;
@@ -61,34 +71,28 @@ export const RepositoryFor = (formDefinition, collectionName, handleFilter = (it
 }
 
 export const useLogin = (setUser) => {
-  useEffect(() => {
-    async function signIn() {
-      const account = await AppWriteClient.provider().account.get();
-      if (account) {
-        setUser(account);
-      } else {
-        const result = await AppWriteClient.login('test@royalzsoftware.de', 'test1234');
-        setUser(result);
-      }
-    }
+    useEffect(() => {
+        async function signIn() {
+            const account = await AppWriteClient.provider().account.get();
+            if (account) {
+                setUser(account);
+            } else {
+                const result = await AppWriteClient.login('test@royalzsoftware.de', 'test1234');
+                setUser(result);
+            }
+        }
 
-    signIn();
-  }, []);
+        signIn();
+    }, []);
 }
 
 export const SessionsRepository = {
     user: undefined,
-    
+
     login: () => {
     }
 }
 
-export const MastersRepository = RepositoryFor(new MasterForm(), "646b50a7d6dd37020d7b", (items, filter) => {
-    if (!!filter.query) {
-        return items.filter(item => item.first_name.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1);
-    }
-
-    return items;
-});
-export const StudentsRepository = RepositoryFor(undefined, "646b50ad2050a56378d2");
+export const MastersRepository = RepositoryFor(new MasterForm(), "646b50a7d6dd37020d7b");
+export const StudentsRepository = RepositoryFor(new StudentForm(), "646b50ad2050a56378d2");
 export const ClassesRepository = RepositoryFor(undefined, "classes");

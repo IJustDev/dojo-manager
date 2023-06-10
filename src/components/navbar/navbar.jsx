@@ -22,11 +22,6 @@ export function Navbar() {
       <a href="https://andybrewer.github.io/mvp/">Dojad</a>
       <ul>
         <li>
-          <NavItem path={''}>
-            Mike<sup>New</sup>
-          </NavItem>
-        </li>
-        <li>
           <NavItem path={'analytics'}>Analytics</NavItem>
         </li>
         <li>
