@@ -34,7 +34,7 @@ export class FormValidator {
         });
     }
 
-    populateForView(item, dataAccess) {
+    async populateForView(item, dataAccess) {
         return item;
     }
 }

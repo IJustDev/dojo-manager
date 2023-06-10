@@ -1,4 +1,3 @@
-import { isValidInputTimeValue } from "@testing-library/user-event/dist/utils";
 import { useEffect, useState } from "react";
 import { useDataAccess } from "../data-layer";
 import { Select } from "./select";
@@ -49,9 +48,13 @@ export class StudentForm extends FormValidator {
         }
     ];
 
-    populateForView(item, dataAccess) {
-        const {planRepository} = dataAccess;
-        const x = planRepository.get(+item.plan);
-        return { ...item, plan: x?.name};
+    async populateForView(item, dataAccess) {
+        const { planRepository } = dataAccess;
+        try {
+            const x = (await planRepository.get(item.plan));
+            return { ...item, plan: x?.name };
+        } catch {
+            return { ...item };
+        }
     }
 }

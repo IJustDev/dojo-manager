@@ -1,6 +1,7 @@
 import { ID, Account, Databases, Client, Query } from 'appwrite';
 import { useEffect } from 'react';
 import { MasterForm } from './forms/master';
+import { PlanForm } from './forms/plan';
 import { StudentForm } from './forms/student';
 export const AppWriteClient = {
     sdk: null,
@@ -48,7 +49,14 @@ export const RepositoryFor = (formDefinition, collectionName) => {
             return AppWriteClient.provider().database.deleteDocument(databaseId, collectionName, id);
         },
         update: (id, updatePayload) => {
-            return AppWriteClient.provider().database.updateDocument(databaseId, collectionName, id, updatePayload);
+            const fieldsToUpdate = formDefinition.fields.map(c => c.formField);
+
+            const actualPayload = fieldsToUpdate.reduce((prev, curr) => {
+                prev[curr] = updatePayload[curr];
+
+                return prev;
+            }, {})
+            return AppWriteClient.provider().database.updateDocument(databaseId, collectionName, id, actualPayload);
         },
         list: async (filter = undefined) => {
             const {documents} = (
@@ -82,4 +90,4 @@ export const SessionsRepository = {
 
 export const MastersRepository = RepositoryFor(new MasterForm(), "646b50a7d6dd37020d7b");
 export const StudentsRepository = RepositoryFor(new StudentForm(), "646b50ad2050a56378d2");
-export const ClassesRepository = RepositoryFor(undefined, "classes");
+export const PlansRepository = RepositoryFor(new PlanForm(), "plans");

@@ -29,7 +29,7 @@ export function CrudTable({ data, headers, style, actions, formDefinition }) {
         const populate = async () => {
             const myData = [];
             for (const item of data) {
-                const x =(await formDefinition.populateForView(item, dataAccess));
+                const x = (await formDefinition.populateForView(item, dataAccess));
                 myData.push(x);
             }
 
@@ -103,7 +103,7 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
 
     useEffect(() => {
         async function fetchData() {
-            const filter = currentSearch != '' ?{ [query_field]: currentSearch }: {};
+            const filter = currentSearch != '' ? { [query_field]: currentSearch } : {};
             const retrievedData = await repository.list(filter);
             setData(retrievedData);
             setFetched(true);
@@ -118,9 +118,9 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
 
     return <>
         {Searchbar}
-        <CrudTable style={style} actions={actions} headers={headers} data={data} formDefinition={repository.formDefinition}/>
+        <CrudTable style={style} actions={actions} headers={headers} data={data} formDefinition={repository.formDefinition} />
         <button onClick={() => {
-            push('create', {resourceRepository: repository, formDefinition})
+            push('create', { resourceRepository: repository, formDefinition })
         }}>Create</button>
     </>
 }

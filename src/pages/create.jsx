@@ -12,5 +12,5 @@ export function CreatePage() {
         ...current.params,
     }
 
-    return <EditableResourceForm {...params} action={'create'}></EditableResourceForm>
+    return <section><EditableResourceForm {...params} action={'create'}></EditableResourceForm></section>
 }

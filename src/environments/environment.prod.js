@@ -1,9 +1,8 @@
-import { StudentsRepository, MastersRepository, SessionsRepository } from '../data-access/app-write';
-import { MockPlanRepository } from '../data-access/mock';
+import { StudentsRepository, MastersRepository, SessionsRepository, PlansRepository } from '../data-access/app-write';
 
 export default {
     studentsRepository: StudentsRepository,
     mastersRepository: MastersRepository,
-    planRepository: MockPlanRepository,
+    planRepository: PlansRepository,
     sessionRepository: SessionsRepository,
 }
