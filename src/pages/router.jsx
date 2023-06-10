@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Navbar } from "../components/navbar/navbar";
 import { useDataAccess } from "../data-access/data-layer";
 import { Analytics } from "./analytics";
@@ -8,15 +9,37 @@ import { EditPage } from "./edit";
 
 export const NavContext = createContext();
 
-export function NavProvider({children}) {
-  const [current, setCurrent] = useState({path: 'cockpit', params: {}});
-  const [history, setHistory] = useState([{path: 'cockpit', params: {}}]);
+export const useLogin = () => {
+  const [user, setUser] = useState(undefined);
+  const { sessionRepository } = useDataAccess();
+
+  const signIn = async (username, password) => {
+    const result = (await sessionRepository.login(username, password))
+    setUser(result);
+  }
+
+  useEffect(() => {
+    const fetch = async () => {
+      const account = await sessionRepository.getSavedUser();
+
+      if (!!account)
+        setUser(account);
+    }
+    fetch();
+  }, []);
+
+  return { user, signIn };
+}
+
+export function NavProvider({ children }) {
+  const [current, setCurrent] = useState({ path: 'cockpit', params: {} });
+  const [history, setHistory] = useState([{ path: 'cockpit', params: {} }]);
 
   const loadInitial = () => {
     const pathFromHash = window.location.hash.split('#')[1]
     if (pathFromHash == 'edit' || pathFromHash == 'create') return;
-    setCurrent({path: pathFromHash ?? 'cockpit'});
-    setHistory([{path: pathFromHash ?? 'cockpit'}])
+    setCurrent({ path: pathFromHash ?? 'cockpit' });
+    setHistory([{ path: pathFromHash ?? 'cockpit' }])
   }
 
   useEffect(() => {
@@ -24,16 +47,16 @@ export function NavProvider({children}) {
     loadInitial();
   }, []);
 
-  const updateCurrent = ({path, params}) => {
+  const updateCurrent = ({ path, params }) => {
     window.location.hash = `${path}`;
-    setCurrent({path, params});
+    setCurrent({ path, params });
   }
 
   const push = (path, params) => {
-    setHistory(prev => [...prev, {path, params}]);
-    updateCurrent({path, params});
+    setHistory(prev => [...prev, { path, params }]);
+    updateCurrent({ path, params });
   }
-  
+
   const back = () => {
     history.pop();
     const previousItem = history[history.length - 1];
@@ -47,30 +70,53 @@ export function NavProvider({children}) {
 
 }
 
+function LoginScreen({ signIn }) {
+  const { handleSubmit, register } = useForm();
+
+  const onSubmit = async (formValues) => {
+    await signIn(formValues.email, formValues.password);
+  }
+
+  return <>
+    <h1>Login</h1>
+    <p>Login please</p>
+
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input type="text" {...register('email')} />
+      <input type="password" {...register('password')} />
+      <input type="submit" />
+    </form>
+  </>
+}
+
 export function Router() {
   const navContext = useContext(NavContext);
-  const {mastersRepository, studentsRepository} = useDataAccess();
+  const { user, signIn } = useLogin();
+
+  if (user == null) {
+    return <LoginScreen signIn={signIn}></LoginScreen>;
+  }
 
   switch (navContext.current.path) {
     case 'edit':
       return (
-      <EditPage></EditPage>
+        <EditPage></EditPage>
       )
     case 'create':
       return (
-      <CreatePage></CreatePage>
+        <CreatePage></CreatePage>
       )
     case 'cockpit':
       return (
-        <Cockpit/>
+        <Cockpit />
       );
     case 'analytics':
       return (
-        <Analytics/>
+        <Analytics />
       );
     default:
       return <header>
-        <Navbar/>
+        <Navbar />
       </header>
   }
 

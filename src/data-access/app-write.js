@@ -70,26 +70,13 @@ export const RepositoryFor = (formDefinition, collectionName) => {
     return repo;
 }
 
-export const useLogin = (setUser) => {
-    useEffect(() => {
-        async function signIn() {
-            const account = await AppWriteClient.provider().account.get();
-            if (account) {
-                setUser(account);
-            } else {
-                const result = await AppWriteClient.login('test@royalzsoftware.de', 'test1234');
-                setUser(result);
-            }
-        }
-
-        signIn();
-    }, []);
-}
 
 export const SessionsRepository = {
-    user: undefined,
-
-    login: () => {
+    login: async (username, password) => {
+        return (await AppWriteClient.login(username, password));
+    },
+    getSavedUser: async () => {
+        return (await AppWriteClient.provider().account.get());
     }
 }
 
