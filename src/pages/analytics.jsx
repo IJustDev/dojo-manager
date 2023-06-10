@@ -1,19 +1,50 @@
+import { Query } from "appwrite";
 import { useEffect, useState } from "react";
 import { VictoryBar, VictoryChart } from "victory";
 import { Navbar } from "../components/navbar/navbar";
 import { useDataAccess } from "../data-access/data-layer";
 
-const useAnalyticsDataProvider = (studentsRepository) => {
+const thisMonth = () => {
+  const date = new Date();
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime();
+
+  return [firstDay, lastDay];
+}
+
+const useAnalyticsDataProvider = () => {
+  const { studentsRepository, plansRepository } = useDataAccess();
   const [loading, setLoading] = useState(true);
   const [membersCount, setMembersCount] = useState(0);
+  const [revenue, setRevenue] = useState(undefined);
 
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     const fetch = async () => {
-      const items = (await studentsRepository.list());
+      const students = (await studentsRepository.list());
 
-      setMembersCount(items.length);
+      const [first, last] = thisMonth();
+
+      setMembersCount(students.length);
+
+      const plansWithCount = students.reduce((plans, student) => {
+        if (plans[student.plan] == undefined) {
+          plans[student.plan] = 0;
+        }
+        plans[student.plan] = plans[student.plan] + 1;
+        return plans;
+      }, {});
+
+      let rev = 0;
+
+      for (const planId of Object.keys(plansWithCount)) {
+        const plan = (await plansRepository.get(planId));
+        rev += plan.pricing * plansWithCount[planId];
+
+      }
+      setRevenue(rev);
+
       setChartData([
         { month: "January", members: 43 },
         { month: "February", members: 45 },
@@ -32,14 +63,14 @@ const useAnalyticsDataProvider = (studentsRepository) => {
   return {
     loading,
     membersCount,
-    chartData
+    chartData, revenue
   }
 }
 
-export function Analytics({}) {
-  const {studentsRepository} = useDataAccess();
+export function Analytics({ }) {
+  const { studentsRepository } = useDataAccess();
 
-  const { loading, membersCount, chartData } = useAnalyticsDataProvider(studentsRepository);
+  const { loading, membersCount, chartData, revenue } = useAnalyticsDataProvider(studentsRepository);
 
   return (
     <>
@@ -60,12 +91,12 @@ export function Analytics({}) {
               <aside>
                 <h3>Active members</h3>
                 <p>
-                  {membersCount} <sup>+ 5 this month</sup>
+                  {membersCount} <sup>+ 1 this month</sup>
                 </p>
               </aside>
               <aside>
-                <h3>Revenue</h3>
-                <p>4.480 €</p>
+                <h3>Current MRR</h3>
+                <b>$ {revenue}</b>
               </aside>
             </section>
             <VictoryChart>

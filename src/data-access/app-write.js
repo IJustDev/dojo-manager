@@ -1,5 +1,4 @@
 import { ID, Account, Databases, Client, Query } from 'appwrite';
-import { useEffect } from 'react';
 import { MasterForm } from './forms/master';
 import { PlanForm } from './forms/plan';
 import { StudentForm } from './forms/student';
@@ -28,25 +27,21 @@ export const AppWriteClient = {
 
 const databaseId = '646b508690f6c1c0362c';
 
-export const DefaultAppWriteFilter = (filter) => {
-}
-
-
 export const RepositoryFor = (formDefinition, collectionName) => {
     const defaultAppWriteFilter = (filter) => {
         const queries = Object.keys(filter).map((key) => {
-            return Query.equal(key, filter[key]);
+            return Query.search(key, filter[key]);
         });
 
         return AppWriteClient.provider().database.listDocuments(databaseId, collectionName, queries);
     }
 
     const repo = {
-        create: (data) => {
-            return AppWriteClient.provider().database.createDocument(databaseId, collectionName, ID.unique(), data);
+        create: async (data) => {
+            return (await AppWriteClient.provider().database.createDocument(databaseId, collectionName, ID.unique(), data));
         },
-        delete: (id) => {
-            return AppWriteClient.provider().database.deleteDocument(databaseId, collectionName, id);
+        delete: async (id) => {
+            return (await AppWriteClient.provider().database.deleteDocument(databaseId, collectionName, id));
         },
         update: (id, updatePayload) => {
             const fieldsToUpdate = formDefinition.fields.map(c => c.formField);
@@ -58,10 +53,12 @@ export const RepositoryFor = (formDefinition, collectionName) => {
             }, {})
             return AppWriteClient.provider().database.updateDocument(databaseId, collectionName, id, actualPayload);
         },
+        listRaw: async (queries) => {
+            return (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName, queries)).documents.map(c => ({ ...c, id: c.$id }));
+        },
         list: async (filter = undefined) => {
             const {documents} = (
                 !!filter ? (await defaultAppWriteFilter(filter)) : (await AppWriteClient.provider().database.listDocuments(databaseId, collectionName)));
-                
 
             return documents.map(c => ({ ...c, id: c.$id }));
         },

@@ -4,13 +4,13 @@ import { Select } from "./select";
 import { FormValidator, RequiredValidator } from "./validator";
 
 const usePlanSelect = ({ selectProps }) => {
-    const { planRepository } = useDataAccess();
+    const { plansRepository } = useDataAccess();
     const [loading, setLoading] = useState(true);
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
-            const data = (await planRepository.list());
+            const data = (await plansRepository.list());
             const x = data.map(c => ({ label: c.name, value: c.id }));
             setOptions(x)
             setLoading(false);
@@ -22,7 +22,7 @@ const usePlanSelect = ({ selectProps }) => {
     if (loading)
         return <p>loading</p>
 
-    return <Select options={options} selectProps={selectProps}></Select>
+    return <Select options={options} allowEmpty={true} selectProps={selectProps}></Select>
 }
 
 export class StudentForm extends FormValidator {
@@ -49,10 +49,12 @@ export class StudentForm extends FormValidator {
     ];
 
     async populateForView(item, dataAccess) {
-        const { planRepository } = dataAccess;
+        const { plansRepository } = dataAccess;
+        if (item.plan == 'undefined')
+            return {...item, plan: undefined};
         try {
-            const x = (await planRepository.get(item.plan));
-            return { ...item, plan: x?.name };
+            const plan = (await plansRepository.get(item.plan));
+            return { ...item, plan: plan.name + ' - ' + plan.pricing + '$' };
         } catch {
             return { ...item };
         }

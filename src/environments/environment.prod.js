@@ -3,6 +3,6 @@ import { StudentsRepository, MastersRepository, SessionsRepository, PlansReposit
 export default {
     studentsRepository: StudentsRepository,
     mastersRepository: MastersRepository,
-    planRepository: PlansRepository,
+    plansRepository: PlansRepository,
     sessionRepository: SessionsRepository,
 }

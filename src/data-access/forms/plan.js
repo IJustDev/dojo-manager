@@ -7,6 +7,12 @@ export class PlanForm extends FormValidator {
             formField: 'name',
             type: 'text',
             validators: [RequiredValidator],
+        },
+        {
+            label: 'Pricing',
+            formField: 'pricing',
+            type: 'number',
+            validators: [RequiredValidator],
         }
     ];
 }

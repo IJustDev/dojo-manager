@@ -26,16 +26,21 @@ export function EditableResourceForm({ resource, resourceRepository, action, onF
             return;
         }
 
-        const act = action == 'update' ? () => {
-            resourceRepository.update(resource.id, data);
-        } : () => {
-            resourceRepository.create(data);
+        const act = action == 'update' ? async () => {
+            (await resourceRepository.update(resource.id, data));
+        } : async () => {
+            (await resourceRepository.create(data));
         }
 
-        act();
-        if (!!onFormSubmit) {
-            onFormSubmit();
+        const actNow = async () => {
+            await act();
+            if (!!onFormSubmit) {
+                onFormSubmit();
+            }
+
         }
+
+        actNow();
     }
 
     return <form onSubmit={handleSubmit(onSubmit)}>

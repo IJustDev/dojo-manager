@@ -82,8 +82,8 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
     const actions = [{
         label: 'Delete',
         destructive: true,
-        callback: (item) => {
-            repository.delete(item.id);
+        callback: async (item) => {
+            await repository.delete(item.id);
             setUpdatedAt(new Date());
         }
     }, {
@@ -91,7 +91,6 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         destructive: false,
         callback: (item) => {
             push('edit', { resourceId: item.id, resourceRepository: repository, action: 'update', formDefinition });
-            setUpdatedAt(new Date());
         }
     }
     ]
@@ -116,11 +115,11 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         return <p>Loading...</p>;
     }
 
-    return <>
+    return <section>
         {Searchbar}
         <CrudTable style={style} actions={actions} headers={headers} data={data} formDefinition={repository.formDefinition} />
         <button onClick={() => {
             push('create', { resourceRepository: repository, formDefinition })
         }}>Create</button>
-    </>
+    </section>
 }

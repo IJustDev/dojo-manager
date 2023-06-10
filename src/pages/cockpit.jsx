@@ -4,7 +4,7 @@ import { Navbar } from "../components/navbar/navbar";
 import { useDataAccess } from '../data-access/data-layer';
 
 export function Cockpit() {
-  const {studentsRepository} = useDataAccess();
+  const {studentsRepository, plansRepository} = useDataAccess();
 
   return (
     <>
@@ -24,6 +24,16 @@ export function Cockpit() {
             headers={['id', 'first_name', 'last_name', 'plan']}
           ></UseCreateCrudTableFor>
         </section>
+        <aside>
+          <header>
+            <h2>Plans</h2>
+          </header>
+          <UseCreateCrudTableFor
+            query_field='name'
+            repository={plansRepository}
+            headers={['id', 'name', 'pricing']}
+          ></UseCreateCrudTableFor>
+        </aside>
       </main>
     </>
   );
