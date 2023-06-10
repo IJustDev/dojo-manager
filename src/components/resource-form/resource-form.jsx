@@ -51,7 +51,7 @@ export function EditableResourceForm({ resource, resourceRepository, action, onF
             return <>
                 <label for={c.label}>{transformLabel(c.label)}</label>
                 {c.customField ? <c.customField selectProps={register(c.formField)}></c.customField> :
-                    <input type={c.type ?? 'text'} {...register(c.formField)} />
+                    <input type={c.type ?? 'text'} step=".1" {...register(c.formField)} />
                 }
             </>
         })}

@@ -73,7 +73,7 @@ function useSearchbar() {
     };
 }
 
-export function UseCreateCrudTableFor({ repository, headers, style, query_field = 'first_name' }) {
+export function UseCreateCrudTableFor({ repository, headers, style, query_field = 'first_name', additionalActions = [] }) {
     const [updatedAt, setUpdatedAt] = useState(new Date());
     const formDefinition = repository.formDefinition;
 
@@ -92,7 +92,8 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         callback: (item) => {
             push('edit', { resourceId: item.id, resourceRepository: repository, action: 'update', formDefinition });
         }
-    }
+    },
+    ...additionalActions
     ]
 
     const [data, setData] = useState([]);

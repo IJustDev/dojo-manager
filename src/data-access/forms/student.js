@@ -45,16 +45,21 @@ export class StudentForm extends FormValidator {
             formField: 'plan',
             validators: [RequiredValidator],
             customField: usePlanSelect,
+        },
+        {
+            label: 'address',
+            formField: 'address',
+            validators: [RequiredValidator],
         }
     ];
 
     async populateForView(item, dataAccess) {
         const { plansRepository } = dataAccess;
         if (item.plan == 'undefined')
-            return {...item, plan: undefined};
+            return {...item, pretty_plan: undefined};
         try {
             const plan = (await plansRepository.get(item.plan));
-            return { ...item, plan: plan.name + ' - ' + plan.pricing + '$' };
+            return { ...item, pretty_plan: plan.name + ' - ' + plan.pricing + '$' };
         } catch {
             return { ...item };
         }
