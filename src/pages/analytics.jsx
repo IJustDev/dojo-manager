@@ -66,6 +66,13 @@ const useAnalyticsDataProvider = () => {
   }
 }
 
+export function Card({ icon, title, value }) {
+  return <aside className='card'>
+    <h3 className="title">{title}</h3>
+    <span className='value'>{value}</span>
+  </aside>
+}
+
 export function Analytics({ }) {
   const { studentsRepository } = useDataAccess();
 
@@ -78,37 +85,30 @@ export function Analytics({ }) {
         <h1>
           ✨ Your Dojo in <u>Numbers</u> 🥋
         </h1>
-        <p>This is how you're doing at a glance </p>
+        <p>See how your dojo is growing, at a glance.</p>
 
-        {loading ? <p>Loading your data. Please stand by...</p> :
-          <>
-            <section>
-              <aside>
-                <h3>New registrations this month</h3>
-                <p>{membersCount}</p>
-              </aside>
-              <aside>
-                <h3>Active members</h3>
-                <p>
-                  {membersCount} <sup>+ 1 this month</sup>
-                </p>
-              </aside>
-              <aside>
-                <h3>Current MRR</h3>
-                <b>$ {revenue}</b>
-              </aside>
-            </section>
+      </header>
+      <main>
+      {loading ? <p>Loading your data. Please stand by...</p> :
+        <>
+          <section>
+            <Card title={'Current MRR'} value={'$ ' + revenue} />
+            <Card title={'New registrations this month'} value={membersCount} />
+            <Card title={'Active members'} value={membersCount} />
+          </section>
+          <section>
             <VictoryChart>
               <VictoryBar
                 data={chartData}
                 x={"month"}
                 y={"members"}
-                style={{ data: { fill: "#2596be", cornerRadius: "5px" } }}
+                style={{ data: { fill: "#D8B573", color: 'white', cornerRadius: "5px" } }}
               />
             </VictoryChart>
-          </>
-        }
-      </header>
+          </section>
+        </>
+      }
+</main>
     </>
   );
 }

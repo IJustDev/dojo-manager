@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary: #D8B573;
+    --background: #1A1612;
+    --background-tint: #26272A;
+    --white: #FFFFFF;
+
+    --border-radius: 0px;
+    --color-link: var(--primary);
+    --color-table: var(--primary);
+    --color-bg-secondary: none;
+    --color-accent: var(--background-tint);
+}
+
+body {
+    background-color: var(--background);
+}
+
+main {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header {
+    text-align: center;
+}
+
+#root>header {
+    min-height: 30rem;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+nav>ul {
+    list-style-type: none;
+    display: inline-block;
+}
+
+nav>ul>li {
+    display: inline-block;
+    margin: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+
+* {
+    color: var(--white);
+    font-family: Rubik, sans-serif;
+}
+
+a {
+    color: var(--white);
+    text-decoration: none;
+}
+
+input {
+    width: calc(100% - 1.6rem);
+}
+
+.card {
+    background-color: var(--background-tint);
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    text-align: left;
+}
+
+.card>.title {
+    text-transform: uppercase;
+    font-weight: lighter;
+    font-size: 1rem;
+}
+
+aside {
+    box-shadow: none !important;
+}
+
+.card>.value {
+    font-size: 2.5rem;
+}
+
+hr {
+    background-color: var(--background-tint);
+}
+
+input {
+    max-width: unset;
+    width: unset;
+    background-color: var(--background-tint);
+}
+
+select {
+    background-color: var(--background-tint);
+    width: 100%;
+}
+
+dialog {
+    background-color: #1e1915;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+form {
+    max-width: unset;
+}

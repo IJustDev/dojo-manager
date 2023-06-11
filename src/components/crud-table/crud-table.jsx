@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useEffect, useState, useContext } from "react";
 import { useDataAccess } from '../../data-access/data-layer';
 import { NavContext } from '../../pages/router';
-import { transformLabel } from '../resource-form/resource-form';
+import { DialogContext } from '../dialog/dialog';
+import { EditableResourceForm, transformLabel } from '../resource-form/resource-form';
 import './crud-table.css';
 
 const CrudTableOptions = ({ item, actions }) => {
@@ -112,15 +113,28 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         fetchData();
     }, [fetched, currentSearch, updatedAt, history]);
 
+
+    const {openDialog, closeDialog} = useContext(DialogContext);
+    const create = () => {
+        openDialog(<>
+            <EditableResourceForm formDefinition={repository.formDefinition} resource={undefined} resourceRepository={repository} action={'create'} onFormSubmit={() => {
+                closeDialog()
+            }}></EditableResourceForm> </>);
+    }
+
     if (!fetched) {
         return <p>Loading...</p>;
     }
 
-    return <section>
-        {Searchbar}
-        <CrudTable style={style} actions={actions} headers={headers} data={data} formDefinition={repository.formDefinition} />
-        <button onClick={() => {
-            push('create', { resourceRepository: repository, formDefinition })
-        }}>New {formDefinition.modelName}</button>
-    </section>
+    return <>
+        <section class="align-left">
+            <h3>{(formDefinition.modelName + 'S').toUpperCase()}</h3>
+            <div class="actions">
+                <div className="searchbar">{Searchbar}</div>
+                <button onClick={() => {
+                    create();
+                }}>New {formDefinition.modelName}</button>
+            </div>
+            <CrudTable style={style} actions={actions} headers={headers} data={data} formDefinition={repository.formDefinition} />
+        </section></>
 }

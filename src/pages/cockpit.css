@@ -2,3 +2,7 @@ main, section {
     max-width: unset;
     width: '100%';
 }
+
+.jumbotron {
+    background-image: "url('https://c4.wallpaperflare.com/wallpaper/142/788/63/cockpit-digital-art-paths-of-hate-wallpaper-preview.jpg')";
+}

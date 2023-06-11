@@ -1,3 +1,30 @@
+.align-left {
+    text-align: left;
+    justify-content: left;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+}
+
+.actions > .searchbar {
+    display: flex;
+    align-self: flex-end;
+    flex-grow: 1;
+    height: 100%;
+}
+
+.actions > .searchbar > input {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    max-height: 100%;
+    width: 100%;
+    outline: none;
+}
+
 table {
     width: 100%;
     display: table;

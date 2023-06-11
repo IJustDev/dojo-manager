@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import './resource-form.css';
 
 export const transformLabel = (key) => {
     const parts = key.split('_');
@@ -45,7 +46,7 @@ export function EditableResourceForm({ resource, resourceRepository, action, onF
 
     return <form onSubmit={handleSubmit(onSubmit)}>
         <header>
-            <h2>Create resource</h2>
+            <h2 style={{textTransform: 'capitalize'}}>{action + ' ' + formDefinition.modelName}</h2>
         </header>
         {keys.map(c => {
             return <>

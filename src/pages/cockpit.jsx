@@ -147,25 +147,21 @@ export function Cockpit() {
       <hr></hr>
       <main>
         <section>
-          <header>
-            <h2>Students</h2>
-          </header>
           <UseCreateCrudTableFor
+            sectionHeader={'Students'}
             repository={studentsRepository}
             additionalActions={[printInvoiceAction()]}
-            headers={['id', 'first_name', 'last_name', 'pretty_plan']}
+            headers={['first_name', 'last_name', 'pretty_plan']}
           ></UseCreateCrudTableFor>
         </section>
-        <aside>
-          <header>
-            <h2>Plans</h2>
-          </header>
+        <hr />
+        <section>
           <UseCreateCrudTableFor
             query_field='name'
             repository={plansRepository}
-            headers={['id', 'name', 'pricing']}
+            headers={['name', 'pricing']}
           ></UseCreateCrudTableFor>
-        </aside>
+        </section>
       </main>
     </>
   );
