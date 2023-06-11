@@ -85,7 +85,7 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         destructive: true,
         callback: async (item) => {
             await repository.delete(item.id);
-            setUpdatedAt(new Date());
+            setFetched(false);
         }
     }, {
         label: 'Edit',
@@ -94,6 +94,7 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
             openDialog(<>
                 <EditableResourceForm formDefinition={repository.formDefinition} resource={item} resourceRepository={repository} action={'update'} onFormSubmit={() => {
                     closeDialog()
+                    setFetched(false);
                 }}></EditableResourceForm> </>);
         }
     },
@@ -120,9 +121,10 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
     const { openDialog, closeDialog } = useContext(DialogContext);
     const create = () => {
         openDialog(<>
-            <EditableResourceForm formDefinition={repository.formDefinition} resource={undefined} resourceRepository={repository} action={'create'} onFormSubmit={() => {
+            <EditableResourceForm formDefinition={repository.formDefinition} resourceRepository={repository} action={'create'} onFormSubmit={() => {
                 closeDialog()
-            }}></EditableResourceForm> </>);
+                setFetched(false);
+            }}></EditableResourceForm></>);
     }
 
     if (!fetched) {

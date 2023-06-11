@@ -56,7 +56,7 @@ export class StudentForm extends FormValidator {
 
     async populateForView(item, dataAccess) {
         const { plansRepository } = dataAccess;
-        if (item.plan == 'undefined')
+        if (item.plan == undefined || item.plan == 'undefined')
             return {...item, pretty_plan: undefined};
         try {
             const plan = (await plansRepository.get(item.plan));

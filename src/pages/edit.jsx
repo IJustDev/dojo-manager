@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { EditableResourceForm } from "../components/resource-form/resource-form";
-import { MasterForm } from "../data-access/forms/master";
 import { NavContext } from "./router";
 
 export function EditPage() {

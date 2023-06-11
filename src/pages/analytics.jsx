@@ -38,8 +38,10 @@ const useAnalyticsDataProvider = () => {
       let rev = 0;
 
       for (const planId of Object.keys(plansWithCount)) {
-        const plan = (await plansRepository.get(planId));
-        rev += plan.pricing * plansWithCount[planId];
+        try {
+          const plan = (await plansRepository.get(planId));
+          rev += plan.pricing * plansWithCount[planId];
+        } catch{}
 
       }
       setRevenue(Math.ceil(rev * 100) / 100);

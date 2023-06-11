@@ -18,7 +18,7 @@ export function EditableResourceForm({ resource, resourceRepository, action, onF
         }),
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
 
         try {
             formDefinition.validate(data);
@@ -27,26 +27,31 @@ export function EditableResourceForm({ resource, resourceRepository, action, onF
             return;
         }
 
-        const act = action == 'update' ? async () => {
-            (await resourceRepository.update(resource.id, data));
-        } : async () => {
-            (await resourceRepository.create(data));
-        }
-
-        const actNow = async () => {
-            await act();
-            if (!!onFormSubmit) {
-                onFormSubmit();
+        try {
+            const act = action == 'update' ? async () => {
+                (await resourceRepository.update(resource.id, data));
+            } : async () => {
+                (await resourceRepository.create(data));
             }
 
-        }
+            const actNow = async () => {
+                await act();
+                if (!!onFormSubmit) {
+                    onFormSubmit();
+                }
 
-        actNow();
+            }
+
+            await actNow();
+        }
+        catch (error) {
+            alert(error.message);
+        }
     }
 
     return <form onSubmit={handleSubmit(onSubmit)}>
         <header>
-            <h2 style={{textTransform: 'capitalize'}}>{action + ' ' + formDefinition.modelName}</h2>
+            <h2 style={{ textTransform: 'capitalize' }}>{action + ' ' + formDefinition.modelName}</h2>
         </header>
         {keys.map(c => {
             return <>
@@ -68,7 +73,6 @@ export function ReadonlyResourceForm({ resource }) {
             return <tr>
                 <td>{c}</td>
                 <td>{resource[c]}</td>
-
             </tr>;
         })}
     </table>;
