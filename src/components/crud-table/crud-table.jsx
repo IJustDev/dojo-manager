@@ -91,7 +91,10 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         label: 'Edit',
         destructive: false,
         callback: (item) => {
-            push('edit', { resourceId: item.id, resourceRepository: repository, action: 'update', formDefinition });
+            openDialog(<>
+                <EditableResourceForm formDefinition={repository.formDefinition} resource={item} resourceRepository={repository} action={'update'} onFormSubmit={() => {
+                    closeDialog()
+                }}></EditableResourceForm> </>);
         }
     },
     ...additionalActions
@@ -114,7 +117,7 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
     }, [fetched, currentSearch, updatedAt, history]);
 
 
-    const {openDialog, closeDialog} = useContext(DialogContext);
+    const { openDialog, closeDialog } = useContext(DialogContext);
     const create = () => {
         openDialog(<>
             <EditableResourceForm formDefinition={repository.formDefinition} resource={undefined} resourceRepository={repository} action={'create'} onFormSubmit={() => {
