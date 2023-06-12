@@ -1,7 +1,7 @@
 import { ID, Account, Databases, Client, Query } from 'appwrite';
-import { MasterForm } from './forms/master';
-import { PlanForm } from './forms/plan';
-import { StudentForm } from './forms/student';
+import { MasterModel } from './forms/master';
+import { PlanModel } from './forms/plan';
+import { StudentModel } from './forms/student';
 export const AppWriteClient = {
     sdk: null,
 
@@ -94,6 +94,6 @@ export const SessionsRepository = {
     }
 }
 
-export const MastersRepository = RepositoryFor(new MasterForm(), "646b50a7d6dd37020d7b");
-export const StudentsRepository = RepositoryFor(new StudentForm(), "646b50ad2050a56378d2");
-export const PlansRepository = RepositoryFor(new PlanForm(), "plans");
+export const MastersRepository = RepositoryFor(new MasterModel(), "646b50a7d6dd37020d7b");
+export const StudentsRepository = RepositoryFor(new StudentModel(), "646b50ad2050a56378d2");
+export const PlansRepository = RepositoryFor(new PlanModel(), "plans");

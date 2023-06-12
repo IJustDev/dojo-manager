@@ -81,14 +81,14 @@ function LoginScreen({ signIn }) {
 
     <form onSubmit={handleSubmit(onSubmit)}>
       <header>
-        <h1>Login</h1>
+        <h1>Dojo Manager</h1>
         <p>Login please</p>
       </header>
       <label for="email">Email</label>
-      <input type="text" {...register('email')} />
+      <input type="email" {...register('email')} />
       <label for="password">Password</label>
       <input type="password" {...register('password')} />
-      <input type="submit" />
+      <input type="submit" value="Login"/>
     </form>
   </section>
 }

@@ -1,6 +1,6 @@
 import { FormValidator, RequiredValidator } from "./validator";
 
-export class PlanForm extends FormValidator {
+export class PlanModel extends FormValidator {
     modelName = 'plan';
     fields = [
         {

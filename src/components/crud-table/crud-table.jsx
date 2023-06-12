@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState, useContext } from "react";
 import { useDataAccess } from '../../data-access/data-layer';
-import { NavContext } from '../../pages/router';
 import { DialogContext } from '../dialog/dialog';
 import { EditableResourceForm, transformLabel } from '../resource-form/resource-form';
 import './crud-table.css';
@@ -78,8 +77,6 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
     const [updatedAt, setUpdatedAt] = useState(new Date());
     const formDefinition = repository.formDefinition;
 
-    const { push, history } = useContext(NavContext);
-
     const actions = [{
         label: 'Delete',
         destructive: true,
@@ -115,7 +112,7 @@ export function UseCreateCrudTableFor({ repository, headers, style, query_field 
         }
 
         fetchData();
-    }, [fetched, currentSearch, updatedAt, history]);
+    }, [fetched, currentSearch, updatedAt]);
 
 
     const { openDialog, closeDialog } = useContext(DialogContext);

@@ -25,7 +25,7 @@ const usePlanSelect = ({ selectProps }) => {
     return <Select options={options} allowEmpty={true} selectProps={selectProps}></Select>
 }
 
-export class StudentForm extends FormValidator {
+export class StudentModel extends FormValidator {
     modelName = 'student';
 
     fields = [

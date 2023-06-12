@@ -94,7 +94,7 @@ hr {
 
 input {
     max-width: unset;
-    width: unset;
+    width: 100% !important;
     background-color: var(--background-tint);
 }
 
